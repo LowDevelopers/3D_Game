@@ -1,0 +1,10 @@
+{
+  "name": "3D_Game",
+  "version": "0.0.1",
+  "dependencies": {},
+  "devDependencies": {
+    "tslint": "^5.7.0",
+    "typescript": "^2.5.2",
+    "webpack": "^3.5.6"
+  }
+}
