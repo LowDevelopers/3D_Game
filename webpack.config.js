@@ -6,7 +6,6 @@ var HTMLWebpackPluginConfig = new HTMLWebpackPlugin({
   inject: 'body'
 });
 
-
 module.exports = {
   entry: './src/index.ts',
   output: {
@@ -32,10 +31,8 @@ module.exports = {
         }
       }
     ]
-
   },
   resolve: {
-    // you can now require('file') instead of require('file.js')
     extensions: ['.tsx','.ts', '.js']
   },
   plugins: [HTMLWebpackPluginConfig]
