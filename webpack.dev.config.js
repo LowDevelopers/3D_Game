@@ -47,8 +47,8 @@ module.exports = {
             { test: /phaser-split\.js$/, loader: 'expose-loader?Phaser' },
             { test: /p2\.js$/, loader: 'expose-loader?p2' },
             { test: /\.ts$/, loader: 'ts-loader', exclude: '/node_modules/' },
-            {test: /\.css$/, use: ['style-loader', 'css-loader']},
-            {test: /\.(png|svg|jpg|gif)$/, loader: 'file-loader'}
+            { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+            { test: /\.(png|svg|jpg|gif)$/, loader: 'file-loader' },
         ]
     },
     devtool: 'source-map'

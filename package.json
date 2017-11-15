@@ -1,6 +1,12 @@
 {
   "name": "3D_Game",
   "version": "0.0.1",
+  "scripts": {
+    "start": "webpack-dev-server --config webpack.dev.config.js --open",
+    "build": "webpack --config webpack.dev.config.js --progress --colors",
+    "server": "webpack-dev-server --config webpack.dev.config.js --open",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
     "babylonjs": "^3.0.7",
     "phaser": "^2.6.2"
@@ -22,10 +28,5 @@
     "webpack": "^3.5.6",
     "webpack-dev-server": "^2.7.1",
     "webpack-shell-plugin": "^0.5.0"
-  },
-  "scripts": {
-    "build:dev": "webpack --config webpack.dev.config.js --progress --colors",
-    "server:dev": "webpack-dev-server --config webpack.dev.config.js --open",
-    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
