@@ -2,6 +2,7 @@ var webpack = require('webpack');
 var path = require('path');
 var HTMLWebpackPlugin = require('html-webpack-plugin');
 var CleanWebpackPlugin = require('clean-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: path.join(__dirname, 'src/app.js'),
@@ -26,7 +27,11 @@ module.exports = {
             template: "./index.html",
             filename: './index.html',
             inject: 'body'
-        })
+        }),
+        new CopyWebpackPlugin([{
+            from: 'src/maps',
+            to: 'maps'
+        }])
     ],
     devServer: {
         contentBase: path.join(__dirname, 'dist'),

@@ -1,5 +1,5 @@
 const levels = {
-    level1: require('./map_1.json')
+    level1: './maps/map_1.json'
 }
 
 export { levels };
