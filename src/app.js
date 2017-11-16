@@ -15,7 +15,7 @@ function preload() {
 let map;
 let layer;
 let player;
-var facing = 'right';
+var facing = 'left';
 var jumpTimer = 0;
 var cursors;
 var jumpButton;
@@ -25,27 +25,27 @@ function create() {
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
    
-     map = game.add.tilemap('level1');
+    map = game.add.tilemap('level1');
     map.addTilesetImage('platform1', 'tiles');
 
     map.setCollisionByExclusion([ 1 ]);
 
-     layer = map.createLayer('level1');
+    layer = map.createLayer('level1');
     layer.resizeWorld();
 
     game.physics.arcade.gravity.y = 250;
     player = game.add.sprite(50, 20, 'player');
 
 
-    player.animations.add('left', [1, 2, 3, 4, 5],10,true);
-    player.animations.add('right', [6, 7, 8, 9, 10],10,true);
+    player.animations.add('left', [ 0, 1, 2, 3],10,true);
+    player.animations.add('right', [ 4, 5, 6, 7],10,true);
 
         
     game.physics.enable(player, Phaser.Physics.ARCADE);
     
     player.body.bounce.y = 0.2;
     player.body.collideWorldBounds = true;
-    player.body.setSize(32, 32, 5, 16);
+    player.body.setSize(16, 16, 5, 16);
     
     game.camera.follow(player);
     
@@ -92,7 +92,7 @@ function create() {
                 }
                 else
                 {
-                    player.frame = 5;
+                    player.frame = 0;
                 }
     
                 facing = 'idle';
