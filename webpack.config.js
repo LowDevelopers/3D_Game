@@ -20,9 +20,6 @@ module.exports = {
         }
     },
     plugins: [
-        new CleanWebpackPlugin([
-            path.join(__dirname, 'dist')
-        ]),
         new HTMLWebpackPlugin({
             template: "./index.html",
             filename: './index.html',
