@@ -87,7 +87,7 @@ function update() {
     }
   }
 
-  if(!(player.body.onFloor())){
+  if(!(player.body.onFloor()) && game.time.now < jumpTimer){
     player.frame = 0;
   }
 
