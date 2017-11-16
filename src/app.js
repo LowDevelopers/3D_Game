@@ -4,18 +4,105 @@ import 'phaser';
 import { images } from './images';
 import { levels } from './maps';
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'root', { preload: preload, create: create });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'root', { preload: preload, create: create, update: update });
 
 function preload() {
     game.load.tilemap('level1', levels.level1, null, Phaser.Tilemap.TILED_JSON);
     game.load.spritesheet('tiles', images.platform1, 16, 16);
-    // game.load.image('logo', images.platform1);
+    game.load.spritesheet('player',images.player,32,32);
 }
 
+let map;
+let layer;
+let player;
+var facing = 'left';
+var jumpTimer = 0;
+var cursors;
+var jumpButton;
+var bg;
+
 function create() {
-    const map = game.add.tilemap('level1');
+
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+   
+    map = game.add.tilemap('level1');
     map.addTilesetImage('platform1', 'tiles');
-    const layer = map.createLayer('level1');
+
+    map.setCollisionByExclusion([ 1 ]);
+
+    layer = map.createLayer('level1');
     layer.resizeWorld();
-    // game.add.sprite(80, 0, 'logo');
+
+    game.physics.arcade.gravity.y = 250;
+    player = game.add.sprite(50, 20, 'player');
+
+
+    player.animations.add('left', [ 0, 1, 2, 3],10,true);
+    player.animations.add('right', [ 4, 5, 6, 7],10,true);
+
+        
+    game.physics.enable(player, Phaser.Physics.ARCADE);
+    
+    player.body.bounce.y = 0.2;
+    player.body.collideWorldBounds = true;
+    player.body.setSize(16, 16, 5, 16);
+    
+    game.camera.follow(player);
+    
+    cursors = game.input.keyboard.createCursorKeys();
+    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
 }
+
+ function update() {
+    
+        game.physics.arcade.collide(player, layer);
+    
+        player.body.velocity.x = 0;
+    
+        if (cursors.left.isDown)
+        {
+            player.body.velocity.x = -150;
+    
+            if (facing != 'left')
+            {
+                player.animations.play('left');
+                facing = 'left';
+            }
+        }
+        else if (cursors.right.isDown)
+        {
+            player.body.velocity.x = 150;
+    
+            if (facing != 'right')
+            {
+                player.animations.play('right');
+                facing = 'right';
+            }
+        }
+        else
+        {
+            if (facing != 'idle')
+            {
+                player.animations.stop();
+    
+                if (facing == 'left')
+                {
+                    player.frame = 0;
+                }
+                else
+                {
+                    player.frame = 4;
+                }
+    
+                facing = 'idle';
+            }
+        }
+        
+        if (jumpButton.isDown && player.body.onFloor() && game.time.now > jumpTimer)
+        {
+            player.body.velocity.y = -250;
+            jumpTimer = game.time.now + 750;
+        }
+    
+    }
