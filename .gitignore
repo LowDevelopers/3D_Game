@@ -60,5 +60,4 @@ fabric.properties
 !.vscode/extensions.json
 
 .idea/
-dist/
 .history/
