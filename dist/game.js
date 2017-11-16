@@ -110,12 +110,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'root', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'root', {
+  preload: preload,
+  create: create,
+  update: update
+});
 
 function preload() {
-    game.load.tilemap('level1', __WEBPACK_IMPORTED_MODULE_4__maps__["a" /* levels */].level1, null, Phaser.Tilemap.TILED_JSON);
-    game.load.spritesheet('tiles', __WEBPACK_IMPORTED_MODULE_3__images__["a" /* images */].platform1, 16, 16);
-    game.load.spritesheet('player',__WEBPACK_IMPORTED_MODULE_3__images__["a" /* images */].player,32,32);
+  game.load.tilemap('level1', __WEBPACK_IMPORTED_MODULE_4__maps__["a" /* levels */].level1, null, Phaser.Tilemap.TILED_JSON);
+  game.load.spritesheet('tiles', __WEBPACK_IMPORTED_MODULE_3__images__["a" /* images */].platform1, 16, 16);
+  game.load.spritesheet('player', __WEBPACK_IMPORTED_MODULE_3__images__["a" /* images */].player, 32, 32);
 }
 
 let map;
@@ -129,89 +133,74 @@ var bg;
 
 function create() {
 
-    game.physics.startSystem(Phaser.Physics.ARCADE);
-   
-    map = game.add.tilemap('level1');
-    map.addTilesetImage('platform1', 'tiles');
+  game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    map.setCollisionByExclusion([ 1 ]);
+  map = game.add.tilemap('level1');
+  map.addTilesetImage('platform1', 'tiles');
 
-    layer = map.createLayer('level1');
-    layer.resizeWorld();
+  map.setCollisionByExclusion([1]);
 
-    game.physics.arcade.gravity.y = 250;
-    player = game.add.sprite(50, 20, 'player');
+  layer = map.createLayer('level1');
+  layer.resizeWorld();
+
+  game.physics.arcade.gravity.y = 250;
+  player = game.add.sprite(50, 20, 'player');
 
 
-    player.animations.add('left', [ 0, 1, 2, 3],10,true);
-    player.animations.add('right', [ 4, 5, 6, 7],10,true);
+  player.animations.add('left', [0, 1, 2, 3], 10, true);
+  player.animations.add('right', [4, 5, 6, 7], 10, true);
 
-        
-    game.physics.enable(player, Phaser.Physics.ARCADE);
-    
-    player.body.bounce.y = 0.2;
-    player.body.collideWorldBounds = true;
-    player.body.setSize(16, 16, 5, 16);
-    
-    game.camera.follow(player);
-    
-    cursors = game.input.keyboard.createCursorKeys();
-    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+  game.physics.enable(player, Phaser.Physics.ARCADE);
+
+  player.body.bounce.y = 0.2;
+  player.body.collideWorldBounds = true;
+  player.body.setSize(16, 16, 5, 16);
+
+  game.camera.follow(player);
+
+  cursors = game.input.keyboard.createCursorKeys();
+  jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
 }
 
- function update() {
-    
-        game.physics.arcade.collide(player, layer);
-    
-        player.body.velocity.x = 0;
-    
-        if (cursors.left.isDown)
-        {
-            player.body.velocity.x = -150;
-    
-            if (facing != 'left')
-            {
-                player.animations.play('left');
-                facing = 'left';
-            }
-        }
-        else if (cursors.right.isDown)
-        {
-            player.body.velocity.x = 150;
-    
-            if (facing != 'right')
-            {
-                player.animations.play('right');
-                facing = 'right';
-            }
-        }
-        else
-        {
-            if (facing != 'idle')
-            {
-                player.animations.stop();
-    
-                if (facing == 'left')
-                {
-                    player.frame = 0;
-                }
-                else
-                {
-                    player.frame = 4;
-                }
-    
-                facing = 'idle';
-            }
-        }
-        
-        if (jumpButton.isDown && player.body.onFloor() && game.time.now > jumpTimer)
-        {
-            player.body.velocity.y = -350;
-            jumpTimer = game.time.now + 750;
-        }
-    
+function update() {
+
+  game.physics.arcade.collide(player, layer);
+
+  player.body.velocity.x = 0;
+
+  if (cursors.left.isDown) {
+    player.body.velocity.x = -150;
+    if (facing != 'left') {
+      player.animations.play('left');
+      facing = 'left';
     }
+  } else if (cursors.right.isDown) {
+    player.body.velocity.x = 150;
+    if (facing != 'right') {
+      player.animations.play('right');
+      facing = 'right';
+    }
+  } else {
+    if (facing != 'idle') {
+      player.animations.stop();
+      if (facing == 'left') {
+        player.frame = 0;
+      } else {
+        player.frame = 4;
+      }
+
+      facing = 'idle';
+    }
+  }
+
+  if (jumpButton.isDown && player.body.onFloor() && game.time.now > jumpTimer) {
+    player.body.velocity.y = -350;
+    jumpTimer = game.time.now + 750;
+  }
+
+}
 
 
 /***/ }),
