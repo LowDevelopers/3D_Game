@@ -3,17 +3,18 @@ import 'pixi';
 import 'phaser';
 import { images } from './images';
 import { levels } from './maps';
+import { AssertsLoader } from './utils/AssetsLoader'
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'root', {
+var game = new Phaser.game(800, 600, Phaser.AUTO, 'root', {
   preload: preload,
   create: create,
   update: update
 });
 
+const assertsLoader = new AssertsLoader(game);
+
 function preload() {
-  game.load.tilemap('level1', levels.level1, null, Phaser.Tilemap.TILED_JSON);
-  game.load.spritesheet('tiles', images.platform1, 16, 16);
-  game.load.spritesheet('player', images.player, 32, 32);
+    assertsLoader.getAssets();
 }
 
 let map;
