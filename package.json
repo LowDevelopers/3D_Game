@@ -2,9 +2,9 @@
   "name": "3D_Game",
   "version": "0.0.1",
   "scripts": {
-    "start": "webpack-dev-server --config webpack.dev.config.js --open",
-    "build": "webpack --config webpack.dev.config.js --progress --colors",
-    "server": "webpack-dev-server --config webpack.dev.config.js --open",
+    "start": "webpack-dev-server --config webpack.config.js --open",
+    "build": "webpack --config webpack.config.js --progress --colors",
+    "server": "webpack-dev-server --config webpack.config.js --open",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
