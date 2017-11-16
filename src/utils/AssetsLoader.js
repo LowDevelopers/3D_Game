@@ -1,4 +1,7 @@
-export default class AssertsLoader{
+import { images } from '../images';
+import { levels } from '../maps';
+
+export default class AssetsLoader{
     constructor(game){
         this.game = game;
     }

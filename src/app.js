@@ -1,20 +1,18 @@
 import 'p2';
 import 'pixi';
 import 'phaser';
-import { images } from './images';
-import { levels } from './maps';
-import { AssertsLoader } from './utils/AssetsLoader'
+import AssetsLoader from './utils/AssetsLoader';
 
-var game = new Phaser.game(800, 600, Phaser.AUTO, 'root', {
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'root', {
   preload: preload,
   create: create,
   update: update
 });
 
-const assertsLoader = new AssertsLoader(game);
 
 function preload() {
-    assertsLoader.getAssets();
+    const assetsLoader = new AssetsLoader(game);
+    assetsLoader.getAssets();
 }
 
 let map;
