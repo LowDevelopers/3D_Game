@@ -92,7 +92,7 @@ function create() {
                 }
                 else
                 {
-                    player.frame = 0;
+                    player.frame = 4;
                 }
     
                 facing = 'idle';
