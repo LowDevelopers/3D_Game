@@ -39,12 +39,10 @@ function create() {
   game.physics.arcade.gravity.y = 250;
   player = game.add.sprite(50, 20, 'player');
 
-    player.animations.add('left', [ 1, 2, 3, 4],10,true);
-    player.animations.add('jump', [0],20,true);
-    player.animations.add('right', [ 5, 6, 7, 8],10,true);
+  player.animations.add('left', [ 1, 2, 3, 4],10,true);
+  player.animations.add('jump', [0],20,true);
+  player.animations.add('right', [ 5, 6, 7, 8],10,true);
     
-
-
 
   game.physics.enable(player, Phaser.Physics.ARCADE);
 
@@ -67,13 +65,13 @@ function update() {
 
   if (cursors.left.isDown) {
     player.body.velocity.x = -150;
-    if (facing != 'left') {
+    if (facing != 'left'   && player.body.onFloor()) {
       player.animations.play('left');
       facing = 'left';
     }
   } else if (cursors.right.isDown) {
     player.body.velocity.x = 150;
-    if (facing != 'right') {
+    if (facing != 'right'   && player.body.onFloor()) {
       player.animations.play('right');
       facing = 'right';
     }
@@ -85,16 +83,18 @@ function update() {
       } else {
         player.frame = 5;
       }
-
       facing = 'idle';
     }
   }
 
+  if(!(player.body.onFloor()) && game.time.now < jumpTimer){
+    player.frame = 0;
+  }
+
   if (jumpButton.isDown && player.body.onFloor() && game.time.now > jumpTimer) {
-    player.animations.stop();
-    facing = 'jump';
+    
     player.body.velocity.y = -350;
-    jumpTimer = game.time.now + 750;
+    jumpTimer = game.time.now + 750;  
   }
 
 }
