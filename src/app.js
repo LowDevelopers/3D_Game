@@ -23,6 +23,9 @@ var jumpTimer = 0;
 var cursors;
 var jumpButton;
 var bg;
+let cursor;
+let doublejump = true;
+let firstJumpTimer = 0;
 
 function create() {
 
@@ -51,11 +54,25 @@ function create() {
   player.body.setSize(16, 16, 5, 16);
 
   game.camera.follow(player);
+  cursor = game.add.sprite( game.world.centerX, game.world.centerY, 'cursor');
+  game.input.addMoveCallback(move, this);
 
   cursors = game.input.keyboard.createCursorKeys();
   jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
+  this.game.canvas.style.cursor = 'none';
+  
 }
+
+function requestLock() {
+  game.input.mouse.requestPointerLock();
+}
+
+function move(pointer, x, y) {
+          cursor.x = game.input.mouse.event.x - 299 + game.camera.x;
+          cursor.y = game.input.mouse.event.y - 16 + game.camera.y;
+
+          
+  }
 
 function update() {
 
@@ -91,10 +108,20 @@ function update() {
     player.frame = 0;
   }
 
-  if (jumpButton.isDown && player.body.onFloor() && game.time.now > jumpTimer) {
-    
-    player.body.velocity.y = -350;
-    jumpTimer = game.time.now + 750;  
+  if(jumpButton.isDown && !(player.body.onFloor()) &&  doublejump === true && game.time.now > firstJumpTimer){
+    player.body.velocity.y = -300;
+    doublejump = false;
   }
 
+  if(player.body.onFloor()){
+    doublejump = true;
+  }
+
+  if (jumpButton.isDown && player.body.onFloor() && game.time.now > jumpTimer) {
+    player.body.velocity.y = -300;
+    jumpTimer = game.time.now + 750;  
+    firstJumpTimer = game.time.now + 200;
+    
+  }
+  console.log(doublejump);
 }
