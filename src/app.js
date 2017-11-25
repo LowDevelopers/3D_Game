@@ -48,7 +48,7 @@ function create() {
 
   map = game.add.tilemap('level1');
   map.addTilesetImage('platform1', 'tiles');
-  map.setCollisionByExclusion([1]);
+  map.setCollisionByExclusion([0]);
 
   layer = map.createLayer('level1');
   layer.resizeWorld();
@@ -181,7 +181,7 @@ function createRope(xAnchor, yAnchor, xCursor, yCursor) {
             //  Set custom rectangle
             newRect.body.setRectangle(width, height);
 
-            if(checkIfCanHook()){
+            if(checkIfCanHook(newRect)){
               console.log('here');
               newRect = game.add.sprite(x, y, 'hook', 1);
               lastRect.bringToTop();
@@ -190,11 +190,12 @@ function createRope(xAnchor, yAnchor, xCursor, yCursor) {
             if (i === length)
             {
                 newRect.body.static = true;
+                newRect.rotation = true;
             }
             else
             {  
                 //  Anchor the first one created
-                newRect.body.mass = length + i;     //  Reduce mass for evey rope element
+                // newRect.body.mass = length + i;     //  Reduce mass for evey rope element
             }
     
             //  After the first rectangle is created we can add the constraint
@@ -210,6 +211,33 @@ function createRope(xAnchor, yAnchor, xCursor, yCursor) {
   }
 }
 
+function forceHook() {
+  let length = hook.length;
+  game.time.events.repeat(Phaser.Timer.SECOND * 0.1, 9, removeLink, this);
+
+}
+
+function removeLink(){
+  let length = hook.length;
+  if(length > 0){
+    if(length === 10){
+      game.physics.p2.world.constraints.splice(0,2);
+      game.physics.p2.createRevoluteConstraint(hook[1], [16, 0], player, [0, 0], 1000);
+      hook[0].kill();
+      hook.splice(0,1);
+    }
+    else{
+      game.physics.p2.world.constraints.splice(0,1);
+      game.physics.p2.world.constraints.splice(-1,1);
+      game.physics.p2.createRevoluteConstraint(hook[1], [16, 0], player, [0, 0], 1000);
+      hook[0].kill();
+      hook.splice(0,1);
+    }
+  
+  }
+ 
+}
+
 function clearAllConstraints() {
   var allConstraints = game.physics.p2.world.constraints.splice(0, game.physics.p2.world.constraints.length);
   if (allConstraints.length > 0) {
@@ -217,6 +245,7 @@ function clearAllConstraints() {
       game.physics.p2.removeConstraint(allConstraints[i]);
     }
   }
+
 }
 
 
@@ -286,6 +315,7 @@ function update() {
 
   if (game.input.activePointer.isDown && hookTimer === true) {
     createRope(player.x, player.y, cursor.x, cursor.y);
+    forceHook();
     hookTimer = false; 
   }
 
@@ -312,7 +342,6 @@ function checkIfCanJump() {
 
   for (var i = 0; i < game.physics.p2.world.narrowphase.contactEquations.length; i++) {
     var c = game.physics.p2.world.narrowphase.contactEquations[i];
-
     if (c.bodyA === player.body.data || c.bodyB === player.body.data) {
       var d = p2.vec2.dot(c.normalA, yAxis); // Normal dot Y-axis
       if (c.bodyA === player.body.data) d *= -1;
@@ -324,17 +353,16 @@ function checkIfCanJump() {
 
 }
 
-function checkIfCanHook(){
+function checkIfCanHook(newRect){
   var yAxis = p2.vec2.fromValues(0, 1);
   var result = false;
 
   for (var i = 0; i < game.physics.p2.world.narrowphase.contactEquations.length; i++) {
+    console.log(game.physics.p2.world.narrowphase.contactEquations.length);
     var c = game.physics.p2.world.narrowphase.contactEquations[i];
-
+    console.log(c);
     if (c.bodyA === newRect.body.data || c.bodyB === newRect.body.data) {
-      var d = p2.vec2.dot(c.normalA, yAxis); // Normal dot Y-axis
-      if (c.bodyA === newRect.body.data) d *= -1;
-      if (d > 0.5) result = true;
+        result = true;
     }
   }
 
