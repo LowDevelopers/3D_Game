@@ -51,25 +51,18 @@ function create() {
   game.physics.startSystem(Phaser.Physics.P2JS);
 
   map = game.add.tilemap('level1');
-  map.addTilesetImage('grass_main','tiles1');
   map.addTilesetImage('generic_deathtiles','tiles2');
-  // map.setTileIndexCallback(259,checkCaustic,this);
-  map.setCollisionBetween(1,258);
-  map.setCollisionBetween(300,1500);
-  layer = map.createLayer('level1');
   
+  map.addTilesetImage('grass_main','tiles1');
+  layer = map.createLayer('grass');
+  map.setCollisionBetween(1,400,layer);
+  map.setCollisionBetween(5120,5160,layer);
   layer.resizeWorld();
-
-  // layerConstick = map.createLayer('Caustic');
-  // layerConstick.resizeWorld();
-  // map.setCollisionBetween(1, 1700,layerConstick);
-
   game.physics.p2.convertTilemap(map, layer);
-  // game.physics.p2.convertTilemap(map, layerConstick);
+
+
   game.physics.p2.restitution = 0;
   game.physics.p2.gravity.y = 300;
-
-
 
   //
 
@@ -533,6 +526,12 @@ function update() {
 
 }
 
+function restart(){
+  release();
+  player.body.x = 300;
+  player.body.y = 300;
+}
+
 function checkIfCanJump() {
 
   var yAxis = p2.vec2.fromValues(0, 1);
@@ -541,6 +540,12 @@ function checkIfCanJump() {
   for (var i = 0; i < game.physics.p2.world.narrowphase.contactEquations.length; i++) {
     var c = game.physics.p2.world.narrowphase.contactEquations[i];
     if (c.bodyA === player.body.data || c.bodyB === player.body.data) {
+      // console.log('a',c.bodyA.id);
+      // console.log('b',c.bodyB.id);
+      if(c.bodyA.id === 37 || c.bodyA.id === 53 || c.bodyA.id === 70 || c.bodyA.id === 63 || c.bodyA.id === 79 || c.bodyA.id === 69 || c.bodyA.id === 88 || c.bodyA.id === 81 || c.bodyA.id === 96){
+        restart();
+        return;
+      }
       var d = p2.vec2.dot(c.normalA, yAxis); // Normal dot Y-axis
       if (c.bodyA === player.body.data) d *= -1;
       if (d > 0.5) result = true;
@@ -560,6 +565,9 @@ function checkIfCanHook(newRect){
   for (var i = 0; i < game.physics.p2.world.narrowphase.contactEquations.length; i++) {
     var c = game.physics.p2.world.narrowphase.contactEquations[i];
     if (c.bodyA === newRect.body.data || c.bodyB === newRect.body.data) {
+      // console.log('a',c.bodyA.id);
+      // console.log('b',c.bodyB.id);
+      
         result = true;
         newRect.body.velocity.x = 0;
         newRect.body.velocity.y = 0;
