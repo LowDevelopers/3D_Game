@@ -101,17 +101,14 @@ function create() {
 
   this.game.canvas.style.cursor = 'none';
   line = new Phaser.Line(player.x, player.y, cursor.body.x, cursor.body.y);
-
+  
+  graphics = game.add.graphics(0,0);
   game.input.onUp.add(release, this);
   game.input.addMoveCallback(move, this);
   // game.physics.p2.setPostBroadphaseCallback(checkCaustic, this);
 
 }
 
-
-function checkCaustic(item,tile) {
-  console.log('here');
-}
   
 
   function pushHook(playerX, playerY,  cursorX,  cursorY){
@@ -154,7 +151,6 @@ function checkCaustic(item,tile) {
     game.physics.p2.enable(fireArrow);
     fireArrow.body.setRectangle(width, height);
     // fireArrow.body.angle = angle;
-    line.setTo(player.x, player.y,  cursorX,  cursorY);
     drawLine = true;
     // fireArrow.body.static = true;
    }
@@ -162,6 +158,7 @@ function checkCaustic(item,tile) {
 
   function createHook(cursorX,  cursorY){
     mouseSpring = game.physics.p2.createSpring(fireArrow,player ,1,8,0);
+   
     // mouseSpring = game.physics.p2.createDistanceConstraint(fireArrow,player ,200);
     hookTimer = false;
   }
@@ -175,7 +172,6 @@ function checkCaustic(item,tile) {
     angle = Math.acos(angle);
     angle = (angle * 180) / Math.PI;
   
-  
     if (fireArrow.y < player.y) {
       angle = -angle;
     }
@@ -186,23 +182,28 @@ function release() {
 
       if(fireArrow){
         game.physics.p2.removeSpring(mouseSpring);
-        // game.physics.p2.removeConstraint(mouseSpring);
         drawLine = false;
-        // graphics.kill();
         fireArrow.kill();
         fireArrow = null;
         hookTimer = false;
       }
-   
   }
   
   function preRender() {
       if(fireArrow){
         if (line)
         {
-            line.setTo(player.x, player.y, fireArrow.x, fireArrow.y);
+            graphics = game.add.graphics(0,0);
+            if(graphics){
+              graphics.lineStyle(4, 0x3D3D3D);
+              graphics.moveTo(player.body.x - game.camera.x,player.body.y - game.camera.y);
+              graphics.lineTo(fireArrow.x - game.camera.x,fireArrow.y - game.camera.y);
+              graphics.endFill();
+            }
+           
         }
       }
+
       
   
   }
@@ -211,9 +212,7 @@ function release() {
   
       if (drawLine)
       {
-          game.debug.geom(line);
-          // game.debug.geom(graphics);
-          
+          graphics.kill();
       }
   
   }
