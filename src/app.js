@@ -57,6 +57,7 @@ function create() {
   layer = map.createLayer('grass');
   map.setCollisionBetween(1,400,layer);
   map.setCollisionBetween(5120,5160,layer);
+  
   layer.resizeWorld();
   game.physics.p2.convertTilemap(map, layer);
 
@@ -66,7 +67,7 @@ function create() {
 
   //
 
-  player = game.add.sprite(300, 300, 'player');
+  player = game.add.sprite(300, 365, 'player');
   // game.physics.enable(player, Phaser.Physics.ARCADE);
   player.animations.add('left', [1, 2, 3, 4], 10, true);
   player.animations.add('jump', [0], 20, true);
@@ -529,7 +530,7 @@ function update() {
 function restart(){
   release();
   player.body.x = 300;
-  player.body.y = 300;
+  player.body.y = 365;
 }
 
 function checkIfCanJump() {
