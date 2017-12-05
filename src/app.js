@@ -52,23 +52,29 @@ function create() {
 
   map = game.add.tilemap('level1');
   map.addTilesetImage('grass_main','tiles1');
-  map.addTilesetImage('jungle_deathtiles','tiles2');
-  map.setCollisionByExclusion([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
-
+  map.addTilesetImage('generic_deathtiles','tiles2');
+  // map.setTileIndexCallback(259,checkCaustic,this);
+  map.setCollisionBetween(1,258);
+  map.setCollisionBetween(300,1500);
   layer = map.createLayer('level1');
-  layerConstick = map.createLayer('constick');
-
+  
   layer.resizeWorld();
-  // layerConstick.resizeWorld();
 
-  //p2
+  // layerConstick = map.createLayer('Caustic');
+  // layerConstick.resizeWorld();
+  // map.setCollisionBetween(1, 1700,layerConstick);
+
   game.physics.p2.convertTilemap(map, layer);
   // game.physics.p2.convertTilemap(map, layerConstick);
   game.physics.p2.restitution = 0;
   game.physics.p2.gravity.y = 300;
+
+
+
   //
 
   player = game.add.sprite(300, 300, 'player');
+  // game.physics.enable(player, Phaser.Physics.ARCADE);
   player.animations.add('left', [1, 2, 3, 4], 10, true);
   player.animations.add('jump', [0], 20, true);
   player.animations.add('right', [5, 6, 7, 8], 10, true);
@@ -76,8 +82,9 @@ function create() {
 
   //p2
   game.physics.p2.enable(player);
+  // game.physics.arcade.enable(player);
+
   player.body.fixedRotation = true;
-  //
   player.body.collideWorldBounds = true;
   game.camera.follow(player);
 
@@ -87,7 +94,8 @@ function create() {
 
  
 
-    game.physics.p2.enable(cursor);
+  game.physics.p2.enable(cursor);
+  // game.physics.arcade.enable(cursor);
     
   cursor.body.collideWorldBounds = false;
   cursor.body.static = true;
@@ -100,9 +108,17 @@ function create() {
   this.game.canvas.style.cursor = 'none';
   line = new Phaser.Line(player.x, player.y, cursor.body.x, cursor.body.y);
 
-      game.input.onUp.add(release, this);
-      game.input.addMoveCallback(move, this);
+  game.input.onUp.add(release, this);
+  game.input.addMoveCallback(move, this);
+  // game.physics.p2.setPostBroadphaseCallback(checkCaustic, this);
+
 }
+
+
+function checkCaustic(item,tile) {
+  console.log('here');
+}
+  
 
   function pushHook(playerX, playerY,  cursorX,  cursorY){
     angle = 0; 
@@ -430,16 +446,15 @@ function move(pointer, x, y, isDown) {
 // }
 
 function update() {
-
+  // game.physics.arcade.collide(player, layer);
 
   if(fireArrow){
     changeAngle();
   }
 
-
   if (left.isDown) {
 
-    player.body.moveLeft(150);
+    player.body.moveLeft(200);
     // player.body.velocity.x = -150;
     if (facing != 'left') {
       player.animations.play('left');
@@ -447,7 +462,7 @@ function update() {
     }
   } else if (right.isDown) {
 
-    player.body.moveRight(150);
+    player.body.moveRight(200);
 
     if (facing != 'right') {
       player.animations.play('right');
@@ -472,7 +487,7 @@ function update() {
 
   if (jumpButton.isDown && !(checkIfCanJump()) && doublejump === true && game.time
     .now > firstJumpTimer) {
-    player.body.velocity.y = -300;
+    player.body.velocity.y = -200;
     doublejump = false;
   }
 
@@ -481,7 +496,7 @@ function update() {
   }
 
   if (jumpButton.isDown && checkIfCanJump() && game.time.now > jumpTimer) {
-    player.body.velocity.y = -300;
+    player.body.velocity.y = -200;
     jumpTimer = game.time.now + 750;
     firstJumpTimer = game.time.now + 200;
   }
@@ -496,6 +511,8 @@ function update() {
   if(game.input.activePointer.isUp && hookTimer === false){
     hookTimer = true;
   }
+
+
 
   // if (game.input.activePointer.isDown && hookTimer === true) {
   //   // createRope(player.x, player.y, cursor.x, cursor.y);
@@ -534,6 +551,7 @@ function checkIfCanJump() {
 
 }
 
+
 function checkIfCanHook(newRect){
   
   var yAxis = p2.vec2.fromValues(0, 1);
@@ -546,9 +564,6 @@ function checkIfCanHook(newRect){
         newRect.body.velocity.x = 0;
         newRect.body.velocity.y = 0;
         newRect.body.static = true;
-        // newRect.body.fixedRotation = true;
-        // game.physics.p2.createRevoluteConstraint(lastRect, [-8,0], player, [0, 0], 600);
-
       }
     if(newRect.body.data === player.body.data){
       result = false;
