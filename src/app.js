@@ -53,6 +53,13 @@ let checkPointX;
 let checkPointY;
 let infoButton;
 
+let playerCollisionGroup;
+let consticCollisionGroup;
+
+let layerStone;
+
+
+
 function create() {
 
   // game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -63,23 +70,48 @@ function create() {
   map.addTilesetImage('generic_deathtiles','tiles2');
   
   map.addTilesetImage('grass_main','tiles1');
+
   layer = map.createLayer('grass');
-  map.setCollisionBetween(1,400,layer);
-  // map.setCollisionBetween(3221225000,3221227000,layer);
-  map.setCollisionBetween(1059,1060,layer);
-  
   layer.resizeWorld();
+
+  layerConstick = map.createLayer('constic');
+  layerConstick.resizeWorld();
+
+  layerStone = map.createLayer('stone');
+  layerStone.resizeWorld();
+
+
+  map.setCollisionByExclusion([], true, layer);
+  map.setCollisionByExclusion([], true, layerConstick);
+  map.setCollisionByExclusion([], true, layerStone);
+
   game.physics.p2.convertTilemap(map, layer);
+  game.physics.p2.convertTilemap(map, layerConstick);
+  game.physics.p2.convertTilemap(map, layerStone);
+
+  map.setTileIndexCallback(3,check,this);
+
+  // map.setCollisionBetween(1,400,layer);
+  // map.setCollisionBetween(1059,1060,layer);
+  
+  
+  // game.physics.p2.convertTilemap(map, layer);
 
 
   game.physics.p2.restitution = 0;
   game.physics.p2.gravity.y = 300;
 
+  playerCollisionGroup = game.physics.p2.createCollisionGroup();
+  consticCollisionGroup = game.physics.p2.createCollisionGroup();
 
+  game.physics.p2.updateBoundsCollisionGroup();
 
   //
 
-  player = game.add.sprite(300, 340, 'player');
+  // player = game.add.sprite(300, 340, 'player');
+  // checkPointX = 300;
+  // checkPointY = 340;
+    player = game.add.sprite(2000, 1740, 'player');
   checkPointX = 300;
   checkPointY = 340;
   // game.physics.enable(player, Phaser.Physics.ARCADE);
@@ -131,6 +163,10 @@ function create() {
 
 }
 
+function check(sprite, tile){
+  console.log('here');
+}
+
   
 
   function pushHook(playerX, playerY,  cursorX,  cursorY){
@@ -146,7 +182,11 @@ function create() {
     angle = Math.acos(angle);
     angle = (angle * 180) / Math.PI;
   
-  
+    if(checkIfCanHook(fireArrow) === 3){
+      release();
+      return;
+    }
+       
     if (cursorY < playerY) {
       angle = -angle;
     }
@@ -180,8 +220,6 @@ function create() {
 
   function createHook(cursorX,  cursorY){
     mouseSpring = game.physics.p2.createSpring(fireArrow,player ,20,7,0);
-   
-    // mouseSpring = game.physics.p2.createDistanceConstraint(fireArrow,player ,200);
     hookTimer = false;
   }
 
@@ -243,222 +281,8 @@ function release() {
 function move(pointer, x, y, isDown) {
   cursor.body.x = x + game.camera.x;
   cursor.body.y = y + game.camera.y;
-  // line.setTo(player.x, player.y, cursor.x, cursor.y);
 }
 
-// function fire(xAnchor, yAnchor, xCursor, yCursor){
-//    xA = xAnchor;
-//    yA = yAnchor;
-//    angle = 0; 
-//   let gip = 0;
-//   let height = 8; //height for the physics body - your image height is 8px
-//   var width = 16;  
-
-
-//   gip = (Math.sqrt((xAnchor - xCursor) * (xAnchor - xCursor) + (yAnchor -
-//     yCursor) * (yAnchor - yCursor)));
-//   angle = ((xCursor - xAnchor)) / gip;
-//   angle = Math.acos(angle);
-//   angle = (angle * 180) / Math.PI;
-
-
-//   if (yCursor < yAnchor) {
-//     angle = -angle;
-//   }
-
-//   // for(let i = 0; i < 9; i++){
-//   //   addHook(x, y,angle);
-//   // }
-
-//   game.time.events.repeat(Phaser.Timer.SECOND * 0.07, 7, addHook, this);
-
-// //  if(hook.length > 8){
-// //     deleteHook();
-// //   }
-
-// }
-
-// function addHook(){
-//     let gip = 0;
-  
-//     if(fireArrow){
-//       gip = (Math.sqrt((xA - fireArrow.body.x) * (xA - fireArrow.body.x) + (yA -
-//         fireArrow.body.y) * (yA - fireArrow.body.y)));
-//       if(gip > 310){
-//         deleteHook();
-//         return;
-//       }
-//     }
-  
-//   let height = 8; //height for the physics body - your image height is 8px
-//   var width = 16;  
-//   let x = xA + (1 * Math.cos((angle * Math.PI) / 180) * 32);
-//   let y = yA + (1 * Math.sin((angle * Math.PI) / 180) * 32);
-//   if(fireArrow){
-//     if(checkIfCanHook(fireArrow)){
-     
-//     }else{
-//       fireArrow.body.velocity.x = fireArrow.body.x - xA + (45 * Math.cos((angle * Math.PI) / 180) * 32);
-//       fireArrow.body.velocity.y = fireArrow.body.y -  yA + (45* Math.sin((angle * Math.PI) / 180) * 32);
-//       newRect = game.add.sprite(x,y, 'hook', 0);    
-//       game.physics.p2.enable(newRect);
-//       newRect.body.setRectangle(width, height);
-//       newRect.body.angle = angle;   
-//       game.physics.p2.createRevoluteConstraint(lastRect, [-8, 0],newRect, [8, 0],800);
-//       lastRect = newRect;
-//       hook.push(lastRect);
-//     }
-//       //  lastRect.body.static = true;
-//    }
-//    else{
-//      let x = xA + (1 * Math.cos((angle * Math.PI) / 180) * 96);
-//      let y = yA + (1 * Math.sin((angle * Math.PI) / 180) * 96);
- 
-//     fireArrow = game.add.sprite(x, y, 'hook', 1)
-//     game.physics.p2.enable(fireArrow);
-//     fireArrow.body.setRectangle(width, height);
-//     fireArrow.body.angle = angle;
-//     lastRect = fireArrow;
-//     hook.push(fireArrow);
-//    }
-// }
-
-
-
-// function createRope(xAnchor, yAnchor, xCursor, yCursor) {
-//   //if we created our first rect this will contain it
-//   let height = 16; //height for the physics body - your image height is 8px
-//   var width = 32;  
-//   let maxForce = 20000; //the force that holds the rectangles together
-//   let angle = 0;
-
-//   //  player.body.mass = 300;
- 
-
-//   let gip = 0;
-//   gip = (Math.sqrt((xAnchor - xCursor) * (xAnchor - xCursor) + (yAnchor -
-//     yCursor) * (yAnchor - yCursor)));
-//   angle = ((xCursor - xAnchor)) / gip;
-//   angle = Math.acos(angle);
-//   angle = (angle * 180) / Math.PI;
-//   let length = 10;
-
-//   if (yCursor < yAnchor) {
-//     angle = -angle;
-//   }
-
-//   for (let i = 1; i <= length; i++) {
-//     let x = xAnchor + (i * Math.cos((angle * Math.PI) / 180) * 32);
-//     let y = yAnchor + (i * Math.sin((angle * Math.PI) / 180) * 32);
-
-//     // Switch sprite every second time
-
-//     if (i === length) {
-//       newRect = game.add.sprite(x, y, 'hook', 1);
-      
-//       lastRect.bringToTop();
-//     } else {
-//       newRect = game.add.sprite(x, y, 'hook', 0);
-      
-//     }
-
-  
-//     game.physics.p2.enable(newRect);
-//    newRect.body.setRectangle(width, height);
-
-//    if(checkIfCanHook(newRect)){
-//     console.log(newRect.body.x);
-//   }
-//    newRect.body.angle = angle;
-
-//             if(newRect.x !== x){
-//               console.log('hete');
-//             }           
-    
-//             if (i === length)
-//             {
-//                 newRect.body.static = true;
-//             }
-//             else{
-//               // newRect.body.static = true;
-//             }
-    
-//             if (lastRect)
-//             {
-//                 game.physics.p2.createRevoluteConstraint(newRect, [-16, 0], lastRect, [8, 0], maxForce);
-//             }
-//             else{
-//               game.physics.p2.createRevoluteConstraint(newRect, [-16, 0], player, [0, 0], maxForce);
-//             }
-//     lastRect = newRect;
-//     hook.push(lastRect);
-//   }
-// }
-
-
-// function forceHook() {
-//   console.log(hook);
-//   game.time.events.repeat(Phaser.Timer.SECOND * 0.6, hookLength, removeLink, this);
-
-// }
-
-// function removeLink(){
-//   let length = hook.length;
-//   // if(length > 3){
-//   //   if(hook[length-1]){
-
-    
-//   //   // if(length === hookLength){
-//   //   //   game.physics.p2.world.constraints.splice(0,2);
-//   //   //   game.physics.p2.createRevoluteConstraint(hook[1], [16, 0], player, [0, 0], 1500);
-//   //   //   hook[0].kill();
-//   //   //   hook.splice(0,1);
-//   //   // }
-//   //   // else{
-//   //   //   if(hook[1]){
-//   //   //   game.physics.p2.world.constraints.splice(0,1);
-//   //   //   game.physics.p2.world.constraints.splice(-1,1);
-//   //   //   game.physics.p2.createRevoluteConstraint(hook[1], [16, 0], player, [0, 0], 1500);
-//   //   //   hook[0].kill();
-//   //   //   hook.splice(0,1);
-//   //   // } 
-//   //   // }
-//   //   game.physics.p2.world.constraints.splice(-2,2);
-//   //   game.physics.p2.createRevoluteConstraint(hook[length-2], [16, 0], player, [0, 0], 1500);
-//   //   hook[length-1].kill();
-//   //   hook.splice(-1,1);
-//   // }
-//   // }
-//     if(length>=2){
-//       game.physics.p2.world.constraints.splice(-2,2);
-//       game.physics.p2.createRevoluteConstraint(hook[length-2], [8, 0], player, [0, 0], 800);
-//       // hook[length-1].kill();
-//       // hook.splice(-1,1);
-//     }
-// }
-
-// function clearAllConstraints() {
-//   var allConstraints = game.physics.p2.world.constraints.splice(0, game.physics.p2.world.constraints.length);
-//   if (allConstraints.length > 0) {
-//     for (let i = 0; i <= allConstraints.length; i++) {
-//       game.physics.p2.removeConstraint(allConstraints[i]);
-//     }
-//   }
-
-// }
-
-
-
-// function deleteHook() {
-//   let length = hook.length;
-//   clearAllConstraints();
-//   for(let i = 0; i < length; i++){
-//     hook[i].kill();
-//   }
-//   hook = [];
-//   lastRect = null;
-//   fireArrow = null;
-// }
 
 function update() {
   // game.physics.arcade.collide(player, layer);
@@ -547,25 +371,6 @@ function update() {
   }
 
 
-
-
-  // if (game.input.activePointer.isDown && hookTimer === true) {
-  //   // createRope(player.x, player.y, cursor.x, cursor.y);
-  //   fire(player.x, player.y, cursor.x, cursor.y);
-  //   hookTimer = false;
-  // }
-
-  // if (game.input.activePointer.isUp  && hookTimer === false) {
-  //   deleteHook();
-  //   hookTimer = true;
-  // }
-
-  // if (game.input.activePointer.isUp) {
-  //   if(hook.length){
-  //   deleteHook();
-  //   } 
-  // }
-
 }
 
 function restart(){
@@ -584,12 +389,9 @@ function checkIfCanJump() {
     if (c.bodyA === player.body.data || c.bodyB === player.body.data) {
       // console.log('a',c.bodyA.id);
       // console.log('b',c.bodyB.id);
-      if(c.bodyA.id === 41 || c.bodyA.id === 52 || c.bodyA.id === 72 || c.bodyA.id === 61 || c.bodyA.id === 78 || c.bodyA.id === 67 || c.bodyA.id === 110 || c.bodyA.id === 81 || c.bodyA.id === 94
-      || c.bodyA.id === 84 || c.bodyA.id === 100 || (c.bodyA.id >= 102 && c.bodyA.id <= 160) || (c.bodyA.id >= 183 && c.bodyA.id <= 196) || (c.bodyA.id >= 198 && c.bodyA.id <= 255) || (c.bodyA.id >= 256 && c.bodyA.id <= 274) || c.bodyA.id === 162 || c.bodyA.id === 157
-      || c.bodyA.id === 146 || c.bodyA.id === 162 || c.bodyA.id === 147 || c.bodyA.id === 141 || c.bodyA.id === 136 || c.bodyA.id === 163 || c.bodyA.id === 176 
-      || c.bodyA.id === 205 || c.bodyA.id === 209 || c.bodyA.id === 217 || c.bodyA.id === 221 || c.bodyA.id === 225 || c.bodyA.id === 234 || c.bodyA.id === 253 || c.bodyA.id === 242 ){
-        restart();
-        return;
+      if(c.bodyA.id >= 305 && c.bodyA.id <= 518){
+        // restart();
+        // return;
       }
       var d = p2.vec2.dot(c.normalA, yAxis); // Normal dot Y-axis
       if (c.bodyA === player.body.data) d *= -1;
@@ -606,12 +408,23 @@ function checkIfCanHook(newRect){
   
   var yAxis = p2.vec2.fromValues(0, 1);
   var result = false;
+  // if(hookTimer === false){
+  //   return;
+  // }
 
+  if(!(newRect)){
+    return;
+  }
   for (var i = 0; i < game.physics.p2.world.narrowphase.contactEquations.length; i++) {
     var c = game.physics.p2.world.narrowphase.contactEquations[i];
+    // console.log(c);
+    //  console.log(game.physics.p2.world);
     if (c.bodyA === newRect.body.data || c.bodyB === newRect.body.data) {
-      console.log('a',c.bodyA.id);
-      console.log('b',c.bodyB.id);
+      // console.log('a',c.bodyA.id);
+      // console.log('b',c.bodyB.id);
+      if(c.bodyA.id >= 522 && c.bodyA.id <= 544){
+        return 3;
+      }
       
         result = true;
         newRect.body.velocity.x = 0;
@@ -622,9 +435,6 @@ function checkIfCanHook(newRect){
       result = false;
     }
   }
-  // if(result === true){
-  //   forceHook();
-  // }
     return result;
 }
 
