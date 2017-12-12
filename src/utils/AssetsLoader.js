@@ -15,5 +15,8 @@ export default class AssetsLoader{
         this.game.load.spritesheet('tiles2',images.generic_deathtiles,32,32);
         this.game.load.spritesheet('flagStart',images.flag_start,32,64);
         this.game.load.spritesheet('flagEnd',images.flag_end,32,64);
+        this.game.load.spritesheet('bg_cloud1',images.bg_cloud1,32,32);
+        this.game.load.spritesheet('bg_cloud2',images.bg_cloud2,32,32);
+        this.game.load.spritesheet('bg_cloud3',images.bg_cloud3,32,32);
     }
 }

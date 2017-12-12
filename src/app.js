@@ -57,6 +57,7 @@ let playerCollisionGroup;
 let consticCollisionGroup;
 
 let layerStone;
+let layerBackground;
 
 
 
@@ -65,11 +66,17 @@ function create() {
   // game.physics.startSystem(Phaser.Physics.ARCADE);
   // game.physics.arcade.gravity.y = 250;
   game.physics.startSystem(Phaser.Physics.P2JS);
+  game.stage.backgroundColor = "#4488AA";
 
   map = game.add.tilemap('level1');
   map.addTilesetImage('generic_deathtiles','tiles2');
-  
   map.addTilesetImage('grass_main','tiles1');
+  map.addTilesetImage('bg_cloud1','bg_cloud1');
+  map.addTilesetImage('bg_cloud2','bg_cloud2');
+  map.addTilesetImage('bg_cloud3','bg_cloud3');
+
+  layerBackground = map.createLayer('background');
+  layerBackground.resizeWorld();
 
   layer = map.createLayer('grass');
   layer.resizeWorld();
@@ -79,6 +86,8 @@ function create() {
 
   layerStone = map.createLayer('stone');
   layerStone.resizeWorld();
+
+
 
 
   map.setCollisionByExclusion([], true, layer);
@@ -108,12 +117,12 @@ function create() {
 
   //
 
-  // player = game.add.sprite(300, 340, 'player');
-  // checkPointX = 300;
-  // checkPointY = 340;
-    player = game.add.sprite(2000, 1740, 'player');
+  player = game.add.sprite(300, 340, 'player');
   checkPointX = 300;
   checkPointY = 340;
+  //   player = game.add.sprite(2000, 1740, 'player');
+  // checkPointX = 300;
+  // checkPointY = 340;
   // game.physics.enable(player, Phaser.Physics.ARCADE);
   player.animations.add('left', [1, 2, 3, 4], 10, true);
   player.animations.add('jump', [0], 20, true);
@@ -390,8 +399,9 @@ function checkIfCanJump() {
       // console.log('a',c.bodyA.id);
       // console.log('b',c.bodyB.id);
       if(c.bodyA.id >= 305 && c.bodyA.id <= 518){
-        // restart();
-        // return;
+        restart();
+        return;
+        // console.log('kil');
       }
       var d = p2.vec2.dot(c.normalA, yAxis); // Normal dot Y-axis
       if (c.bodyA === player.body.data) d *= -1;
@@ -422,7 +432,7 @@ function checkIfCanHook(newRect){
     if (c.bodyA === newRect.body.data || c.bodyB === newRect.body.data) {
       // console.log('a',c.bodyA.id);
       // console.log('b',c.bodyB.id);
-      if(c.bodyA.id >= 522 && c.bodyA.id <= 544){
+      if(c.bodyA.id >= 522 && c.bodyA.id <= 558){
         return 3;
       }
       
