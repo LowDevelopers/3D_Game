@@ -2,6 +2,7 @@ import 'p2';
 import 'pixi';
 import 'phaser';
 import AssetsLoader from '../utils/AssetsLoader';
+import game from './main.js';
 
 let map;
 let layer;
@@ -46,6 +47,13 @@ let layerStone;
 let layerBackground;
 
 let backButton;
+
+let musicJump;
+let hookAttach;
+let hookNoAttach;
+let musicDeath;
+let musicLand;
+let musicFoot;
 
 
 let game = {
@@ -106,13 +114,13 @@ let game = {
   
     //
   
-    player = game.add.sprite(300, 340, 'player');
-    checkPointX = 300;
-    checkPointY = 340;
-    //   player = game.add.sprite(2000, 1740, 'player');
+    // player = game.add.sprite(300, 340, 'player');
     // checkPointX = 300;
     // checkPointY = 340;
-    // game.physics.enable(player, Phaser.Physics.ARCADE);
+      player = game.add.sprite(2000, 1740, 'player');
+    checkPointX = 300;
+    checkPointY = 340;
+
     player.animations.add('left', [1, 2, 3, 4], 10, true);
     player.animations.add('jump', [0], 20, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
@@ -159,6 +167,12 @@ let game = {
     flagSecondEnd = game.add.sprite(1730,1730,'flagEnd');
     flagThirdStart = game.add.sprite(2000,1730,'flagStart');
     flagThirdEnd = game.add.sprite(2925,2947,'flagEnd');
+
+    musicJump = this.add.audio('music_jump');
+    hookAttach = this.add.audio('hook_attach');
+    hookNoAttach = this.add.audio('hook_noattach');
+    musicDeath = this.add.audio('death');
+    musicLand = this.add.audio('land');
   },
   update: function(){
     if(fireArrow){
@@ -168,7 +182,6 @@ let game = {
 
   
     if (left.isDown) {
-  
       player.body.moveLeft(230);
       // player.body.velocity.x = -150;
       if (facing != 'left') {
@@ -176,7 +189,6 @@ let game = {
         facing = 'left';
       }
     } else if (right.isDown) {
-  
       player.body.moveRight(230);
   
       if (facing != 'right') {
@@ -202,6 +214,7 @@ let game = {
   
     if (jumpButton.isDown && !(checkIfCanJump()) && doublejump === true && game.time
       .now > firstJumpTimer) {
+        musicJump.play();
       player.body.velocity.y = -250;
       doublejump = false;
     }
@@ -211,6 +224,7 @@ let game = {
     }
   
     if (jumpButton.isDown && checkIfCanJump() && game.time.now > jumpTimer) {
+      musicJump.play();
       player.body.velocity.y = -300;
       jumpTimer = game.time.now + 750;
       firstJumpTimer = game.time.now + 200;
@@ -239,6 +253,10 @@ let game = {
       checkPointY = 1740;
       player.body.x = checkPointX;
       player.body.y = checkPointY;
+    }
+
+    if(Math.abs(player.body.x - flagThirdEnd.x) <= 20 && Math.abs(player.body.y - flagThirdEnd.y) <= 50){
+      this.state.start('Win');
     }
   
     if(infoButton.isDown){
@@ -270,8 +288,9 @@ let game = {
          
       }
     } 
-  }
+  },
 }
+
 
 
 function check(sprite, tile){
@@ -386,8 +405,9 @@ function checkIfCanJump() {
       // console.log('a',c.bodyA.id);
       // console.log('b',c.bodyB.id);
       if(c.bodyA.id >= 305 && c.bodyA.id <= 518){
-        restart();
-        return;
+        // musicDeath.play();
+        // restart();
+        // return;
         // console.log('kil');
       }
       var d = p2.vec2.dot(c.normalA, yAxis); // Normal dot Y-axis
@@ -420,9 +440,11 @@ function checkIfCanHook(newRect){
       // console.log('a',c.bodyA.id);
       // console.log('b',c.bodyB.id);
       if(c.bodyA.id >= 522 && c.bodyA.id <= 558){
+        hookNoAttach.play();
         return 3;
       }
       
+        hookAttach.play();
         result = true;
         newRect.body.velocity.x = 0;
         newRect.body.velocity.y = 0;

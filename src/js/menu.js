@@ -4,6 +4,7 @@ import game from './main.js';
 
 let load_complete = false;
 let menuMusic, musicOn = false;
+let clickMusic;
 const Menu = {
     preload: function(){
         this.load.onLoadStart.add(loadMenuStart, this);
@@ -23,7 +24,7 @@ const Menu = {
         const menu_text = this.add.text(400, 80, "HOOK LIFE", style);
         menu_text.setShadow(1, 1, 'rgba(0,0,0,0.5)', 2);
         menu_text.anchor.setTo(0.5, 0.5);
-        menu_text.visible = false;
+        // menu_text.visible = false;
         if (load_complete) menu_text.visible = true;
         const startButton = this.add.button(400, 200, 'startGameButton', this.startGame, this);
         const settings = this.add.button(400, 350, 'settingsButton', this.settings, this);
@@ -31,13 +32,21 @@ const Menu = {
         settings.anchor.setTo(0.5, 0.5);
         // startButton.scale.setTo(0.2, 0.2);
         // settings.scale.setTo(0.2, 0.2);
+        menuMusic = this.add.audio('music_menu');
+        menuMusic.loop = true;
+        menuMusic.play();
+
+        clickMusic = this.add.audio('button_click');
+        clickMusic.loop = true;
     },
     startGame: function() {
-        // menuMusic.stop();
+        clickMusic.play();
+        menuMusic.stop();
         this.state.start('Game');
     },
     settings: function() {
-        // menuMusic.stop();
+        clickMusic.play();
+        menuMusic.stop();
         this.state.start('Settings');
     }
 };

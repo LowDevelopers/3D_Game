@@ -29,6 +29,12 @@ export default class AssetsLoader{
         this.game.load.image('backButton',images.backButton);
 
         this.game.load.audio('music_menu', audio.music_menu);
-        
+        this.game.load.audio('button_click', audio.button_click);
+        this.game.load.audio('music_jump', audio.music_jump);
+        this.game.load.audio('hook_attach', audio.hook_attach);
+        this.game.load.audio('hook_noattach', audio.hook_noattach);
+        this.game.load.audio('death', audio.death);
+        this.game.load.audio('foot', audio.foot);
+        this.game.load.audio('land', audio.land);
     }
 }

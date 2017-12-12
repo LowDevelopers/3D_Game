@@ -1,6 +1,8 @@
 import AssetsLoader from '../utils/AssetsLoader';
 import game from './main.js';
 
+let menuMusic, musicOn = false;
+
 const Settings = {
     preload: function(){
         const assetsLoader = new AssetsLoader(Settings);
@@ -25,11 +27,12 @@ const Settings = {
 
         const back = this.add.button(400, 410, 'backButton', this.menu, this);
         back.anchor.setTo(0.5, 0.5);
-        // back.scale.setTo(0.2, 0.2);
-        // menuMusic.play();
+        menuMusic = this.add.audio('music_menu');
+        menuMusic.loop = true;
+        menuMusic.play();
     },
     menu: function() {
-        // menuMusic.stop();
+        menuMusic.stop();
         this.state.start('Menu');
     }
 }
