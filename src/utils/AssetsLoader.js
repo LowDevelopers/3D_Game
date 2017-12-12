@@ -13,5 +13,7 @@ export default class AssetsLoader{
         this.game.load.spritesheet('hook',images.hook,16,8);
         this.game.load.spritesheet('tiles1',images.grass_main,32,32);
         this.game.load.spritesheet('tiles2',images.generic_deathtiles,32,32);
+        this.game.load.spritesheet('flagStart',images.flag_start,32,64);
+        this.game.load.spritesheet('flagEnd',images.flag_end,32,64);
     }
 }

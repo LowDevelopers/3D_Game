@@ -6,6 +6,8 @@ const images = {
     player: require('./player.png'),
     cursor: require('./cursor.png'),
     hook: require('./hook.png'),
+    flag_start: require('./flagStart.png'),
+    flag_end: require('./flagEnd.png'),
 }
 
 export { images };

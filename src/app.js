@@ -43,6 +43,15 @@ let right;
 let angle;
 let graphics;
 let layerConstick;
+let flagFirstStart;
+let flagFirstEnd;
+let flagSecondStart;
+let flagSecondEnd;
+let flagThirdStart;
+let flagThirdEnd;
+let checkPointX;
+let checkPointY;
+let infoButton;
 
 function create() {
 
@@ -56,7 +65,8 @@ function create() {
   map.addTilesetImage('grass_main','tiles1');
   layer = map.createLayer('grass');
   map.setCollisionBetween(1,400,layer);
-  map.setCollisionBetween(5120,5160,layer);
+  // map.setCollisionBetween(3221225000,3221227000,layer);
+  map.setCollisionBetween(1059,1060,layer);
   
   layer.resizeWorld();
   game.physics.p2.convertTilemap(map, layer);
@@ -65,9 +75,13 @@ function create() {
   game.physics.p2.restitution = 0;
   game.physics.p2.gravity.y = 300;
 
+
+
   //
 
-  player = game.add.sprite(300, 365, 'player');
+  player = game.add.sprite(300, 340, 'player');
+  checkPointX = 300;
+  checkPointY = 340;
   // game.physics.enable(player, Phaser.Physics.ARCADE);
   player.animations.add('left', [1, 2, 3, 4], 10, true);
   player.animations.add('jump', [0], 20, true);
@@ -98,6 +112,7 @@ function create() {
   fireButton = game.input.keyboard.addKey(Phaser.Keyboard.F);
   left = game.input.keyboard.addKey(Phaser.Keyboard.A);
   right = game.input.keyboard.addKey(Phaser.Keyboard.D);
+  infoButton = game.input.keyboard.addKey(Phaser.Keyboard.C);
 
   this.game.canvas.style.cursor = 'none';
   line = new Phaser.Line(player.x, player.y, cursor.body.x, cursor.body.y);
@@ -106,6 +121,13 @@ function create() {
   game.input.onUp.add(release, this);
   game.input.addMoveCallback(move, this);
   // game.physics.p2.setPostBroadphaseCallback(checkCaustic, this);
+
+  flagFirstStart = game.add.sprite(300,320,'flagStart');
+  flagFirstEnd = game.add.sprite(1300,1217,'flagEnd');
+  flagSecondStart = game.add.sprite(1120,1217,'flagStart');
+  flagSecondEnd = game.add.sprite(1730,1730,'flagEnd');
+  flagThirdStart = game.add.sprite(2000,1730,'flagStart');
+  flagThirdEnd = game.add.sprite(2925,2947,'flagEnd');
 
 }
 
@@ -157,7 +179,7 @@ function create() {
   }
 
   function createHook(cursorX,  cursorY){
-    mouseSpring = game.physics.p2.createSpring(fireArrow,player ,1,8,0);
+    mouseSpring = game.physics.p2.createSpring(fireArrow,player ,20,7,0);
    
     // mouseSpring = game.physics.p2.createDistanceConstraint(fireArrow,player ,200);
     hookTimer = false;
@@ -447,7 +469,7 @@ function update() {
 
   if (left.isDown) {
 
-    player.body.moveLeft(200);
+    player.body.moveLeft(230);
     // player.body.velocity.x = -150;
     if (facing != 'left') {
       player.animations.play('left');
@@ -455,7 +477,7 @@ function update() {
     }
   } else if (right.isDown) {
 
-    player.body.moveRight(200);
+    player.body.moveRight(230);
 
     if (facing != 'right') {
       player.animations.play('right');
@@ -480,7 +502,7 @@ function update() {
 
   if (jumpButton.isDown && !(checkIfCanJump()) && doublejump === true && game.time
     .now > firstJumpTimer) {
-    player.body.velocity.y = -200;
+    player.body.velocity.y = -250;
     doublejump = false;
   }
 
@@ -489,7 +511,7 @@ function update() {
   }
 
   if (jumpButton.isDown && checkIfCanJump() && game.time.now > jumpTimer) {
-    player.body.velocity.y = -200;
+    player.body.velocity.y = -300;
     jumpTimer = game.time.now + 750;
     firstJumpTimer = game.time.now + 200;
   }
@@ -504,6 +526,26 @@ function update() {
   if(game.input.activePointer.isUp && hookTimer === false){
     hookTimer = true;
   }
+
+  if(Math.abs(player.body.x - flagFirstEnd.x) <= 20 && Math.abs(player.body.y - flagFirstEnd.y) <= 50){
+    checkPointX = 1120;
+    checkPointY = 1215;
+    player.body.x = checkPointX;
+    player.body.y = checkPointY;
+  }
+
+  if(Math.abs(player.body.x - flagSecondEnd.x) <= 20 && Math.abs(player.body.y - flagSecondEnd.y) <= 50){
+    checkPointX = 2000;
+    checkPointY = 1740;
+    player.body.x = checkPointX;
+    player.body.y = checkPointY;
+  }
+
+  if(infoButton.isDown){
+    console.log(player.body.x);
+    console.log(player.body.y);
+  }
+
 
 
 
@@ -528,8 +570,8 @@ function update() {
 
 function restart(){
   release();
-  player.body.x = 300;
-  player.body.y = 365;
+  player.body.x = checkPointX;
+  player.body.y = checkPointY;
 }
 
 function checkIfCanJump() {
@@ -542,7 +584,10 @@ function checkIfCanJump() {
     if (c.bodyA === player.body.data || c.bodyB === player.body.data) {
       // console.log('a',c.bodyA.id);
       // console.log('b',c.bodyB.id);
-      if(c.bodyA.id === 37 || c.bodyA.id === 53 || c.bodyA.id === 70 || c.bodyA.id === 63 || c.bodyA.id === 79 || c.bodyA.id === 69 || c.bodyA.id === 88 || c.bodyA.id === 81 || c.bodyA.id === 96){
+      if(c.bodyA.id === 41 || c.bodyA.id === 52 || c.bodyA.id === 72 || c.bodyA.id === 61 || c.bodyA.id === 78 || c.bodyA.id === 67 || c.bodyA.id === 110 || c.bodyA.id === 81 || c.bodyA.id === 94
+      || c.bodyA.id === 84 || c.bodyA.id === 100 || (c.bodyA.id >= 102 && c.bodyA.id <= 160) || (c.bodyA.id >= 183 && c.bodyA.id <= 196) || (c.bodyA.id >= 198 && c.bodyA.id <= 255) || (c.bodyA.id >= 256 && c.bodyA.id <= 274) || c.bodyA.id === 162 || c.bodyA.id === 157
+      || c.bodyA.id === 146 || c.bodyA.id === 162 || c.bodyA.id === 147 || c.bodyA.id === 141 || c.bodyA.id === 136 || c.bodyA.id === 163 || c.bodyA.id === 176 
+      || c.bodyA.id === 205 || c.bodyA.id === 209 || c.bodyA.id === 217 || c.bodyA.id === 221 || c.bodyA.id === 225 || c.bodyA.id === 234 || c.bodyA.id === 253 || c.bodyA.id === 242 ){
         restart();
         return;
       }
@@ -565,8 +610,8 @@ function checkIfCanHook(newRect){
   for (var i = 0; i < game.physics.p2.world.narrowphase.contactEquations.length; i++) {
     var c = game.physics.p2.world.narrowphase.contactEquations[i];
     if (c.bodyA === newRect.body.data || c.bodyB === newRect.body.data) {
-      // console.log('a',c.bodyA.id);
-      // console.log('b',c.bodyB.id);
+      console.log('a',c.bodyA.id);
+      console.log('b',c.bodyB.id);
       
         result = true;
         newRect.body.velocity.x = 0;
