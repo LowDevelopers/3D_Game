@@ -1,5 +1,6 @@
 import { images } from '../images';
 import { levels } from '../maps';
+import { audio } from '../audio';
 
 export default class AssetsLoader{
     constructor(game){
@@ -26,6 +27,8 @@ export default class AssetsLoader{
         this.game.load.image('buttonMouse',images.buttonMouse);
         this.game.load.image('buttonEsc',images.buttonEsc);
         this.game.load.image('backButton',images.backButton);
+
+        this.game.load.audio('music_menu', audio.music_menu);
         
     }
 }
