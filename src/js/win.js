@@ -1,7 +1,7 @@
 import AssetsLoader from '../utils/AssetsLoader';
 import game from './main.js';
 
-let menuMusic, musicOn = false;
+let  clickMusic, menuMusic, musicOn = false;
 
 const Win = {
     preload: function(){
@@ -25,8 +25,11 @@ const Win = {
         menuMusic = this.add.audio('music_menu');
         menuMusic.loop = true;
         menuMusic.play();
+
+        clickMusic = this.add.audio('button_click');
     },
     menu: function() {
+        clickMusic.play();
         menuMusic.stop();
         this.state.start('Menu');
     }

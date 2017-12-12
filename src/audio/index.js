@@ -1,7 +1,7 @@
 
 const audio = {
-    music_menu: require('./music_menu.mp3'),
-    button_click: require('./button_click.mp3'),
+    music_menu: require('./music_menu.wav'),
+    button_click: require('./button_click.wav'),
     music_jump: require('./music_jump.wav'),
     hook_attach: require('./hook_attach.wav'),
     hook_noattach: require('./hook_noattach.wav'),

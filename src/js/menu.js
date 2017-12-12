@@ -37,7 +37,6 @@ const Menu = {
         menuMusic.play();
 
         clickMusic = this.add.audio('button_click');
-        clickMusic.loop = true;
     },
     startGame: function() {
         clickMusic.play();
